@@ -1,419 +1,202 @@
-<h1 align="center">
-  <br>
-  <a href="https://github.com/thedotmack/claude-mem">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/thedotmack/claude-mem/main/docs/public/claude-mem-logo-for-dark-mode.webp">
-      <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/thedotmack/claude-mem/main/docs/public/claude-mem-logo-for-light-mode.webp">
-      <img src="https://raw.githubusercontent.com/thedotmack/claude-mem/main/docs/public/claude-mem-logo-for-light-mode.webp" alt="Claude-Mem" width="400">
-    </picture>
-  </a>
-  <br>
-</h1>
+# Self-Hosted Unlimited Agent Memory
 
-<p align="center">
-  <a href="docs/i18n/README.zh.md">🇨🇳 中文</a> •
-  <a href="docs/i18n/README.zh-tw.md">🇹🇼 繁體中文</a> •
-  <a href="docs/i18n/README.ja.md">🇯🇵 日本語</a> •
-  <a href="docs/i18n/README.pt.md">🇵🇹 Português</a> •
-  <a href="docs/i18n/README.pt-br.md">🇧🇷 Português</a> •
-  <a href="docs/i18n/README.ko.md">🇰🇷 한국어</a> •
-  <a href="docs/i18n/README.es.md">🇪🇸 Español</a> •
-  <a href="docs/i18n/README.de.md">🇩🇪 Deutsch</a> •
-  <a href="docs/i18n/README.fr.md">🇫🇷 Français</a> •
-  <a href="docs/i18n/README.he.md">🇮🇱 עברית</a> •
-  <a href="docs/i18n/README.ar.md">🇸🇦 العربية</a> •
-  <a href="docs/i18n/README.ru.md">🇷🇺 Русский</a> •
-  <a href="docs/i18n/README.pl.md">🇵🇱 Polski</a> •
-  <a href="docs/i18n/README.cs.md">🇨🇿 Čeština</a> •
-  <a href="docs/i18n/README.nl.md">🇳🇱 Nederlands</a> •
-  <a href="docs/i18n/README.tr.md">🇹🇷 Türkçe</a> •
-  <a href="docs/i18n/README.uk.md">🇺🇦 Українська</a> •
-  <a href="docs/i18n/README.vi.md">🇻🇳 Tiếng Việt</a> •
-  <a href="docs/i18n/README.tl.md">🇵🇭 Tagalog</a> •
-  <a href="docs/i18n/README.id.md">🇮🇩 Indonesia</a> •
-  <a href="docs/i18n/README.th.md">🇹🇭 ไทย</a> •
-  <a href="docs/i18n/README.hi.md">🇮🇳 हिन्दी</a> •
-  <a href="docs/i18n/README.bn.md">🇧🇩 বাংলা</a> •
-  <a href="docs/i18n/README.ur.md">🇵🇰 اردو</a> •
-  <a href="docs/i18n/README.ro.md">🇷🇴 Română</a> •
-  <a href="docs/i18n/README.sv.md">🇸🇪 Svenska</a> •
-  <a href="docs/i18n/README.it.md">🇮🇹 Italiano</a> •
-  <a href="docs/i18n/README.el.md">🇬🇷 Ελληνικά</a> •
-  <a href="docs/i18n/README.hu.md">🇭🇺 Magyar</a> •
-  <a href="docs/i18n/README.fi.md">🇫🇮 Suomi</a> •
-  <a href="docs/i18n/README.da.md">🇩🇰 Dansk</a> •
-  <a href="docs/i18n/README.no.md">🇳🇴 Norsk</a>
-</p>
+**Cross-LLM · Cross-device · Cross-environment · You own the data**
 
-<h4 align="center">Persistent memory compression system built for <a href="https://claude.com/claude-code" target="_blank">Claude Code</a>.</h4>
+A self-hosted shared-memory backend so every AI you talk to — Claude Code,
+Claude Desktop, Codex, Cursor, Antigravity, Continue.dev, Cline, Cowork
+sandboxes, your phone, Windows, Linux, Android — reads and writes to the
+*same* pool of memories. No vendor lock-in. No cloud dependency. Runs on
+your home server.
 
-<p align="center">
-  <a href="LICENSE">
-    <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License">
-  </a>
-  <a href="package.json">
-    <img src="https://img.shields.io/badge/version-6.5.0-green.svg" alt="Version">
-  </a>
-  <a href="package.json">
-    <img src="https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg" alt="Node">
-  </a>
-  <a href="https://github.com/thedotmack/awesome-claude-code">
-    <img src="https://awesome.re/mentioned-badge.svg" alt="Mentioned in Awesome Claude Code">
-  </a>
-</p>
-
-<p align="center">
-  <a href="https://trendshift.io/repositories/15496" target="_blank">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/thedotmack/claude-mem/main/docs/public/trendshift-badge-dark.svg">
-      <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/thedotmack/claude-mem/main/docs/public/trendshift-badge.svg">
-      <img src="https://raw.githubusercontent.com/thedotmack/claude-mem/main/docs/public/trendshift-badge.svg" alt="thedotmack/claude-mem | Trendshift" width="250" height="55"/>
-    </picture>
-  </a>
-</p>
-
-<br>
-
-<table align="center">
-  <tr>
-    <td align="center">
-      <a href="https://github.com/thedotmack/claude-mem">
-        <picture>
-          <img
-            src="https://raw.githubusercontent.com/thedotmack/claude-mem/main/docs/public/cm-preview.gif"
-            alt="Claude-Mem Preview"
-            width="500"
-          >
-        </picture>
-      </a>
-    </td>
-    <td align="center">
-      <a href="https://www.star-history.com/#thedotmack/claude-mem&Date">
-        <picture>
-          <source
-            media="(prefers-color-scheme: dark)"
-            srcset="https://api.star-history.com/image?repos=thedotmack/claude-mem&type=date&theme=dark&legend=top-left"
-          />
-          <source
-            media="(prefers-color-scheme: light)"
-            srcset="https://api.star-history.com/image?repos=thedotmack/claude-mem&type=date&legend=top-left"
-          />
-          <img
-            alt="Star History Chart"
-            src="https://api.star-history.com/image?repos=thedotmack/claude-mem&type=date&legend=top-left"
-            width="500"
-          />
-        </picture>
-      </a>
-    </td>
-  </tr>
-</table>
-
-<p align="center">
-  <a href="#quick-start">Quick Start</a> •
-  <a href="#how-it-works">How It Works</a> •
-  <a href="#mcp-search-tools">Search Tools</a> •
-  <a href="#documentation">Documentation</a> •
-  <a href="#configuration">Configuration</a> •
-  <a href="#troubleshooting">Troubleshooting</a> •
-  <a href="#license">License</a>
-</p>
-
-<p align="center">
-  Claude-Mem seamlessly preserves context across sessions by automatically capturing tool usage observations, generating semantic summaries, and making them available to future sessions. This enables Claude to maintain continuity of knowledge about projects even after sessions end or reconnect.
-</p>
-
----
-
-## Quick Start
-
-Install with a single command:
-
-```bash
-npx claude-mem install
+```
+   ┌────────────┐    ┌────────────┐    ┌────────────┐    ┌────────────┐
+   │ Claude Code│    │   Codex /  │    │ Antigravity│    │ Cowork /   │
+   │  on macOS  │    │   Cursor   │    │  on Linux  │    │  sandbox   │
+   └─────┬──────┘    └─────┬──────┘    └─────┬──────┘    └─────┬──────┘
+         │           HTTP / Tailscale          │          git-handoff
+         └─────────────────┬───────────────────┘                │
+                           ▼                                     │
+              ┌─────────────────────┐                           │
+              │  Your always-on box │  ◄────────────────────────┘
+              │  (HA add-on or      │   Chroma 1.5.x vector DB
+              │   plain Docker)     │   data on local disk
+              │  + Tailscale mesh   │   HA-backed up daily
+              └─────────────────────┘
 ```
 
-Or install for Gemini CLI (auto-detects `~/.gemini`):
+---
 
-```bash
-npx claude-mem install --ide gemini-cli
-```
-Or install for OpenCode:
+## What's in this repo
 
-```bash
-npx claude-mem install --ide opencode
-```
+This repo has two layers:
 
-Or install from the plugin marketplace inside Claude Code:
+| Layer | What it is | Where |
+|---|---|---|
+| **claude-mem plugin** | The upstream Claude Code plugin by [@thedotmack](https://github.com/thedotmack/claude-mem) that captures session observations, compresses them with Claude, and injects context into future sessions. | (root — upstream code) |
+| **Self-hosted server** | Everything needed to replace the per-machine local Chroma DB with a shared, always-on, self-hosted Chroma backend accessible from every device and every AI tool. | [`self-hosted-server/`](self-hosted-server/) |
 
-```bash
-/plugin marketplace add thedotmack/claude-mem
+You can use either layer independently:
 
-/plugin install claude-mem
-```
-
-Restart Claude Code or Gemini CLI. Context from previous sessions will automatically appear in new sessions.
-
-> **Note:** Claude-Mem is also published on npm, but `npm install -g claude-mem` installs the **SDK/library only** — it does not register the plugin hooks or set up the worker service. Always install via `npx claude-mem install` or the `/plugin` commands above.
-
-### 🦞 OpenClaw Gateway
-
-Install claude-mem as a persistent memory plugin on [OpenClaw](https://openclaw.ai) gateways with a single command:
-
-```bash
-curl -fsSL https://install.cmem.ai/openclaw.sh | bash
-```
-
-The installer handles dependencies, plugin setup, AI provider configuration, worker startup, and optional real-time observation feeds to Telegram, Discord, Slack, and more. See the [OpenClaw Integration Guide](https://docs.claude-mem.ai/openclaw-integration) for details.
-
-**Key Features:**
-
-- 🧠 **Persistent Memory** - Context survives across sessions
-- 📊 **Progressive Disclosure** - Layered memory retrieval with token cost visibility
-- 🔍 **Skill-Based Search** - Query your project history with mem-search skill
-- 🖥️ **Web Viewer UI** - Real-time memory stream at http://localhost:37777
-- 💻 **Claude Desktop Skill** - Search memory from Claude Desktop conversations
-- 🔒 **Privacy Control** - Use `<private>` tags to exclude sensitive content from storage
-- ⚙️ **Context Configuration** - Fine-grained control over what context gets injected
-- 🤖 **Automatic Operation** - No manual intervention required
-- 🔗 **Citations** - Reference past observations with IDs (access via http://localhost:37777/api/observation/{id} or view all in the web viewer at http://localhost:37777)
-- 🧪 **Beta Channel** - Try experimental features like Endless Mode via version switching
+- **Plugin only** — great if you just need per-machine memory for Claude Code.
+- **Self-hosted server only** — use the CLI and SKILL.md with any AI tool, no claude-mem plugin required.
+- **Both together** — the full setup: plugin generates observations automatically, self-hosted server makes them available everywhere.
 
 ---
 
-## Documentation
+## Why this exists
 
-📚 **[View Full Documentation](https://docs.claude-mem.ai/)** - Browse on official website
+The default for AI assistants today: every session is a blank slate. You
+re-explain context, restate conventions, repeat decisions. Vendor "memory"
+features lock you to one platform and ship your data to their servers.
 
-### Getting Started
+This project gives you the other path:
 
-- **[Installation Guide](https://docs.claude-mem.ai/installation)** - Quick start & advanced installation
-- **[Gemini CLI Setup](https://docs.claude-mem.ai/gemini-cli/setup)** - Dedicated guide for Google's Gemini CLI integration
-- **[Usage Guide](https://docs.claude-mem.ai/usage/getting-started)** - How Claude-Mem works automatically
-- **[Search Tools](https://docs.claude-mem.ai/usage/search-tools)** - Query your project history with natural language
-- **[Beta Features](https://docs.claude-mem.ai/beta-features)** - Try experimental features like Endless Mode
-
-### Best Practices
-
-- **[Context Engineering](https://docs.claude-mem.ai/context-engineering)** - AI agent context optimization principles
-- **[Progressive Disclosure](https://docs.claude-mem.ai/progressive-disclosure)** - Philosophy behind Claude-Mem's context priming strategy
-
-### Architecture
-
-- **[Overview](https://docs.claude-mem.ai/architecture/overview)** - System components & data flow
-- **[Architecture Evolution](https://docs.claude-mem.ai/architecture-evolution)** - The journey from v3 to v5
-- **[Hooks Architecture](https://docs.claude-mem.ai/hooks-architecture)** - How Claude-Mem uses lifecycle hooks
-- **[Hooks Reference](https://docs.claude-mem.ai/architecture/hooks)** - 7 hook scripts explained
-- **[Worker Service](https://docs.claude-mem.ai/architecture/worker-service)** - HTTP API & Bun management
-- **[Database](https://docs.claude-mem.ai/architecture/database)** - SQLite schema & FTS5 search
-- **[Search Architecture](https://docs.claude-mem.ai/architecture/search-architecture)** - Hybrid search with Chroma vector database
-
-### Configuration & Development
-
-- **[Configuration](https://docs.claude-mem.ai/configuration)** - Environment variables & settings
-- **[Development](https://docs.claude-mem.ai/development)** - Building, testing, contributing
-- **[Troubleshooting](https://docs.claude-mem.ai/troubleshooting)** - Common issues & solutions
+- **One pool, every tool.** Anything that speaks HTTP can read and write memories.
+- **You own the host.** A Home Assistant add-on, or any always-on Linux box. Data stays on your disk.
+- **Cross-device by default.** Tailscale (free for personal use) makes the endpoint reachable from anywhere on your tailnet — phone, laptop, cloud sandbox, all see the same memories.
+- **Cross-environment.** Sandboxed AI sessions that can't reach your network sync via git instead.
+- **Cross-LLM, cross-vendor.** The schema is plain Chroma metadata. No Anthropic-, OpenAI-, or Google-specific assumptions. Any AI that can execute a bash script or hit an HTTP endpoint can use it.
+- **Survives outages.** Daily Home Assistant backups capture the Chroma data (HNSW segments + SQLite index) and can replicate to any HA-compatible remote backup target.
 
 ---
 
-## How It Works
+## Tool compatibility
 
-**Core Components:**
-
-1. **5 Lifecycle Hooks** - SessionStart, UserPromptSubmit, PostToolUse, Stop, SessionEnd (6 hook scripts)
-2. **Smart Install** - Cached dependency checker (pre-hook script, not a lifecycle hook)
-3. **Worker Service** - HTTP API on port 37777 with web viewer UI and 10 search endpoints, managed by Bun
-4. **SQLite Database** - Stores sessions, observations, summaries
-5. **mem-search Skill** - Natural language queries with progressive disclosure
-6. **Chroma Vector Database** - Hybrid semantic + keyword search for intelligent context retrieval
-
-See [Architecture Overview](https://docs.claude-mem.ai/architecture/overview) for details.
-
----
-
-## MCP Search Tools
-
-Claude-Mem provides intelligent memory search through **4 MCP tools** following a token-efficient **3-layer workflow pattern**:
-
-**The 3-Layer Workflow:**
-
-1. **`search`** - Get compact index with IDs (~50-100 tokens/result)
-2. **`timeline`** - Get chronological context around interesting results
-3. **`get_observations`** - Fetch full details ONLY for filtered IDs (~500-1,000 tokens/result)
-
-**How It Works:**
-- Claude uses MCP tools to search your memory
-- Start with `search` to get an index of results
-- Use `timeline` to see what was happening around specific observations
-- Use `get_observations` to fetch full details for relevant IDs
-- **~10x token savings** by filtering before fetching details
-
-**Available MCP Tools:**
-
-1. **`search`** - Search memory index with full-text queries, filters by type/date/project
-2. **`timeline`** - Get chronological context around a specific observation or query
-3. **`get_observations`** - Fetch full observation details by IDs (always batch multiple IDs)
-
-**Example Usage:**
-
-```typescript
-// Step 1: Search for index
-search(query="authentication bug", type="bugfix", limit=10)
-
-// Step 2: Review index, identify relevant IDs (e.g., #123, #456)
-
-// Step 3: Fetch full details
-get_observations(ids=[123, 456])
-```
-
-See [Search Tools Guide](https://docs.claude-mem.ai/usage/search-tools) for detailed examples.
+| AI Tool | How it connects | What it gets |
+|---|---|---|
+| **Claude Code** | SKILL.md loaded by plugin, bash CLI | Auto-injected context + search |
+| **Claude Desktop** | bash CLI via `run_bash_tool` / shell | search + add |
+| **Codex / OpenAI Assistants** | bash CLI via code interpreter | search + add |
+| **Cursor** | Cursor rules call bash CLI | search on file open |
+| **Continue.dev** | `claude-mem` CLI as a slash command | search + add |
+| **Cline** | SKILL.md + bash CLI | full read/write |
+| **Antigravity** | SKILL.md loaded from iCloud/git | full read/write |
+| **Cowork (no-egress sandbox)** | git-handoff extension | async write; read on next Mac session |
+| **Any HTTP client** | Chroma REST API directly | full Chroma API |
+| **Android / Termux** | bash CLI + Alpine proot | search + add |
+| **Windows (PowerShell)** | bash CLI via WSL or git-bash | search + add |
 
 ---
 
-## Beta Features
+## Components
 
-Claude-Mem offers a **beta channel** with experimental features like **Endless Mode** (biomimetic memory architecture for extended sessions). Switch between stable and beta versions from the web viewer UI at http://localhost:37777 → Settings.
+### Home Assistant add-on
 
-See **[Beta Features Documentation](https://docs.claude-mem.ai/beta-features)** for details on Endless Mode and how to try it.
+`self-hosted-server/ha-addon/` — a local HA add-on that runs Chroma 1.5.x as a
+Supervisor-managed container. Data lands on `/share/claude-mem-chroma/` so it
+survives add-on rebuilds and is captured by native HA backups.
 
----
+Alternatively, use plain Docker — any Linux host with `docker run` works.
 
-## System Requirements
+### Universal skill + CLI
 
-- **Node.js**: 18.0.0 or higher
-- **Claude Code**: Latest version with plugin support
-- **Bun**: JavaScript runtime and process manager (auto-installed if missing)
-- **uv**: Python package manager for vector search (auto-installed if missing)
-- **SQLite 3**: For persistent storage (bundled)
+`self-hosted-server/client/` contains two pieces:
 
----
-### Windows Setup Notes
+- **`SKILL.md`** — a skill file your AI tool reads to learn how to use the
+  memory server. Works with Claude Code skills, Codex system prompts, Cursor
+  rules, Continue.dev slash commands, Cline tool definitions, or any
+  prompt-injection surface that supports markdown files.
 
-If you see an error like:
+- **`claude-mem`** — a bash CLI with 7 subcommands:
+  `health` · `search` · `get-session` · `list-decisions` · `list-blockers` ·
+  `add-narrative` · `add-fact`
 
-```powershell
-npm : The term 'npm' is not recognized as the name of a cmdlet
-```
+  Uses `uvx + chromadb` — no Node, no Go, no compiled binary. Runs anywhere
+  Python 3.10+ and `uv` are available.
 
-Make sure Node.js and npm are installed and added to your PATH. Download the latest Node.js installer from https://nodejs.org and restart your terminal after installation.
+### Git-handoff extension
 
----
+`self-hosted-server/extensions/git-handoff/` — for sandboxed AI agents with no
+network egress. The agent appends a structured `## Session` block to a git
+repo, commits and pushes. A Mac/Linux ingester (`ingest-session.py`) pulls the
+repo and writes the session data to the shared Chroma pool.
 
-## Configuration
+Solves: "my cloud AI sandbox can't reach my home network."
 
-Settings are managed in `~/.claude-mem/settings.json` (auto-created with defaults on first run). Configure AI model, worker port, data directory, log level, and context injection settings.
+### Tailscale sandbox extension
 
-See the **[Configuration Guide](https://docs.claude-mem.ai/configuration)** for all available settings and examples.
+`self-hosted-server/extensions/tailscale-sandbox/` — ephemeral auth-key recipe
+so disposable cloud containers can join your tailnet for the duration of one
+session, reach the memory server directly, then auto-expire.
 
-### Mode & Language Configuration
+### Architecture docs
 
-Claude-Mem supports multiple workflow modes and languages via the `CLAUDE_MEM_MODE` setting.
+`self-hosted-server/docs/`:
 
-This option controls both:
-- The workflow behavior (e.g. code, chill, investigation)
-- The language used in generated observations
-
-#### How to Configure
-
-Edit your settings file at `~/.claude-mem/settings.json`:
-
-```json
-{
-  "CLAUDE_MEM_MODE": "code--zh"
-}
-```
-
-Modes are defined in `plugin/modes/`. To see all available modes locally:
-
-```bash
-ls ~/.claude/plugins/marketplaces/thedotmack/plugin/modes/
-```
-
-#### Available Modes
-
-| Mode | Description |
-|------------|-------------------------|
-| `code` | Default English mode |
-| `code--zh` | Simplified Chinese mode |
-| `code--ja` | Japanese mode |
-
-Language-specific modes follow the pattern `code--[lang]` where `[lang]` is the ISO 639-1 language code (e.g., `zh` for Chinese, `ja` for Japanese, `es` for Spanish).
-
-> Note: `code--zh` (Simplified Chinese) is already built-in — no additional installation or plugin update is required.
-
-#### After Changing Mode
-
-Restart Claude Code to apply the new mode configuration.
----
-
-## Development
-
-See the **[Development Guide](https://docs.claude-mem.ai/development)** for build instructions, testing, and contribution workflow.
+| Doc | What it covers |
+|---|---|
+| `ARCHITECTURE.md` | Full design rationale, component diagram, data flow |
+| `SCHEMA.md` | Chroma collection schema — every field, filter patterns, query examples |
+| `BACKUP-RESTORE.md` | HA backup structure, decryption steps, restore runbook |
+| `TROUBLESHOOTING.md` | Common failures (Chroma version, ENTRYPOINT, musl, multi-key where filters) |
+| `CLIENT-INTEGRATIONS.md` | Per-tool integration guide for every AI tool in the compatibility table |
 
 ---
 
-## Troubleshooting
+## Quickstart
 
-If experiencing issues, describe the problem to Claude and the troubleshoot skill will automatically diagnose and provide fixes.
+### Human setup
 
-See the **[Troubleshooting Guide](https://docs.claude-mem.ai/troubleshooting)** for common issues and solutions.
+1. **Read [`self-hosted-server/docs/ARCHITECTURE.md`](self-hosted-server/docs/ARCHITECTURE.md)** — understand the design before deploying.
+2. **Deploy the server** — [`self-hosted-server/ha-addon/`](self-hosted-server/ha-addon/) for Home Assistant, or `docker run chromadb/chroma:1.5.9` for plain Docker.
+3. **Wire Tailscale** — install on your server and every client device.
+4. **Install the client** — copy `self-hosted-server/client/claude-mem` to your PATH and drop `self-hosted-server/client/skill/SKILL.md` where your AI tool loads skills.
+5. **Configure each AI tool** — see [`self-hosted-server/docs/CLIENT-INTEGRATIONS.md`](self-hosted-server/docs/CLIENT-INTEGRATIONS.md).
+
+### AI agent setup
+
+Read [`self-hosted-server/INSTALL-FOR-AGENTS.md`](self-hosted-server/INSTALL-FOR-AGENTS.md) end-to-end first.
+It's an 8-phase runbook with prerequisite checks, decision trees, and
+verification gates written for autonomous agent execution.
 
 ---
 
-## Bug Reports
+## Status
 
-Create comprehensive bug reports with the automated generator:
+Built and battle-tested in personal use. The reference deployment runs across:
 
-```bash
-cd ~/.claude/plugins/marketplaces/thedotmack
-npm run bug-report
-```
+- macOS (Claude Code, Claude Desktop, native CLI)
+- Linux (Cowork / cloud sandboxes via git-handoff)
+- Windows 11 (Claude Code, PowerShell)
+- Android (Termux + Alpine proot)
 
-## Contributing
+Memory pool on the reference deployment: 5000+ observations across multiple
+project tags. Daily backups include the full vector index + HNSW segments,
+encrypted, replicated offsite.
 
-Contributions are welcome! Please:
+---
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes with tests
-4. Update documentation
-5. Submit a Pull Request
+## Upstream plugin
 
-See [Development Guide](https://docs.claude-mem.ai/development) for contribution workflow.
+The Claude Code plugin in this repo is [@thedotmack/claude-mem](https://github.com/thedotmack/claude-mem).
+It handles automatic observation capture (6 lifecycle hooks), AI-powered
+compression, and context injection for Claude Code sessions. Plugin docs and
+installation: see the upstream repo.
+
+The self-hosted server layer in `self-hosted-server/` is an independent
+addition that replaces the per-machine local Chroma DB with a shared backend.
+
+---
+
+## Architecture in one sentence
+
+Every AI session writes structured observations to a Chroma vector DB you
+host; every future session queries it via semantic search and gets relevant
+past context injected automatically — across all your devices, all your AI
+tools, forever.
 
 ---
 
 ## License
 
-Claude-Mem is licensed under the Apache License 2.0.
+MIT — see [LICENSE](LICENSE).
 
-We chose Apache-2.0 because durable agentic memory should be easy to embed in
-developer tools, local agents, MCP servers, enterprise systems, robotics stacks,
-and production agent harnesses.
+## Contributing
 
-See the [LICENSE](LICENSE) file for full details. See [docs/license.md](docs/license.md)
-and [docs/ip-boundary.md](docs/ip-boundary.md) for licensing scope and the
-open/commercial boundary.
+PRs welcome. High-leverage contributions:
 
-**Note on Ragtime**: The `ragtime/` directory is licensed under the **Apache License 2.0**. See [ragtime/LICENSE](ragtime/LICENSE) for details.
-
----
-
-## Support
-
-- **Documentation**: [docs/](docs/)
-- **Issues**: [GitHub Issues](https://github.com/thedotmack/claude-mem/issues)
-- **Repository**: [github.com/thedotmack/claude-mem](https://github.com/thedotmack/claude-mem)
-- **Official X Account**: [@Claude_Memory](https://x.com/Claude_Memory)
-- **Official Discord**: [Join Discord](https://discord.com/invite/J4wttp9vDu)
-- **Author**: Alex Newman ([@thedotmack](https://github.com/thedotmack))
-
----
-
-**Built with Claude Agent SDK** | **Works with Claude Code** | **Made with TypeScript**
-
----
-
-### What About $CMEM?
-
-$CMEM is a solana token created by a 3rd party without Claude-Mem's prior consent, but officially embraced by the creator of Claude-Mem (Alex Newman, @thedotmack). The token acts as a community catalyst for growth and a vehicle for bringing real-time agent data to the developers and knowledge workers that need it most. $CMEM: 2TsmuYUrsctE57VLckZBYEEzdokUF8j8e1GavekWBAGS
+1. **Adapter configs** for specific AI tools (Cursor rules, Continue.dev YAML,
+   Cline tool defs) — see [`self-hosted-server/docs/CLIENT-INTEGRATIONS.md`](self-hosted-server/docs/CLIENT-INTEGRATIONS.md).
+2. **MCP server wrapper** so MCP-capable clients (Claude Desktop, Cursor MCP)
+   can use the memory pool as a first-class tool without the bash CLI layer.
+3. **Docker Compose recipe** for non-HA Linux deployments.
