@@ -1,0 +1,255 @@
+#!/usr/bin/env bash
+# claude-mem — CLI wrapper for the Personal Memory Server.
+#
+# Drop-in tool for any AI/dev workflow that can shell out.
+# Endpoints below are placeholders — edit the HOSTS array for your deployment.
+#
+# USAGE
+#   claude-mem health
+#   claude-mem search <text> [--project <slug>] [--n <int>] [--type narrative|fact]
+#   claude-mem get-session <memory_session_id>
+#   claude-mem list-decisions [--project <slug>]
+#   claude-mem list-blockers  [--project <slug>]
+#   claude-mem add-narrative  --project <slug> --title <t> --doc <text>
+#                             [--session-id <uuid>] [--id-prefix <prefix>]
+#   claude-mem add-fact       --project <slug> --title <t> --doc <text>
+#                             [--session-id <uuid>] [--id-prefix <prefix>]
+#                             [--concept blocker|open_decision]
+#
+# REQUIRES
+#   uvx (Astral) installed; provides ephemeral chromadb client via:
+#     uvx --with chromadb==1.0.16 python3 ...
+
+set -uo pipefail
+
+# ── CONFIGURE ME ──────────────────────────────────────────────────────────
+# List your endpoints in preferred order. The script picks the first one
+# that responds to /api/v2/heartbeat. Common shape:
+#   1) Tailscale MagicDNS FQDN  (works LAN + off-LAN)
+#   2) LAN IP                   (faster on home network)
+#   3) Tailscale 100.X.Y.Z      (DNS-free fallback)
+HOSTS=(
+    "<your-server-host>"
+    # "your-tailnet-name.ts.net"
+    # "10.0.0.X"
+    # "100.X.Y.Z"
+)
+PORT=8000
+COLLECTION="personal_memory"
+
+# ── pick the first reachable endpoint ─────────────────────────────────────
+pick_host() {
+    for h in "${HOSTS[@]}"; do
+        if curl -sS --max-time 3 "http://${h}:${PORT}/api/v2/heartbeat" 2>/dev/null | grep -q nanosecond; then
+            echo "$h"
+            return 0
+        fi
+    done
+    echo "ERROR: no Personal Memory Server endpoint reachable. Tried: ${HOSTS[*]}" >&2
+    echo "       Edit the HOSTS array at the top of this script." >&2
+    return 1
+}
+
+run_py() {
+    local host
+    host="$(pick_host)" || return 1
+    HOST="$host" COLLECTION="$COLLECTION" PORT="$PORT" \
+        uvx --quiet --with chromadb==1.0.16 python3 -c "$1" "${@:2}"
+}
+
+cmd_health() {
+    local host
+    host="$(pick_host)" || exit 1
+    echo "endpoint: http://${host}:${PORT}  (reachable)"
+    run_py '
+import os, chromadb
+c = chromadb.HttpClient(host=os.environ["HOST"], port=int(os.environ["PORT"]))
+print("heartbeat:", c.heartbeat())
+col = c.get_collection(os.environ["COLLECTION"])
+print(f"collection: {col.name}  id={col.id}  count={col.count()}")
+'
+}
+
+cmd_search() {
+    local query="" project="" n=5 ftype=""
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            --project) project="$2"; shift 2 ;;
+            --n) n="$2"; shift 2 ;;
+            --type) ftype="$2"; shift 2 ;;
+            *) query="$query $1"; shift ;;
+        esac
+    done
+    query="$(echo "$query" | sed -e 's/^ *//' -e 's/ *$//')"
+    if [ -z "$query" ]; then
+        echo "USAGE: claude-mem search <text> [--project P] [--n N] [--type narrative|fact]" >&2
+        exit 2
+    fi
+
+    QUERY="$query" PROJECT="$project" N="$n" FTYPE="$ftype" run_py '
+import os, chromadb
+c = chromadb.HttpClient(host=os.environ["HOST"], port=int(os.environ["PORT"]))
+col = c.get_collection(os.environ["COLLECTION"])
+clauses = []
+if os.environ.get("PROJECT"): clauses.append({"project": os.environ["PROJECT"]})
+if os.environ.get("FTYPE"):   clauses.append({"field_type": os.environ["FTYPE"]})
+if len(clauses) == 0:   where = None
+elif len(clauses) == 1: where = clauses[0]
+else:                   where = {"$and": clauses}
+r = col.query(query_texts=[os.environ["QUERY"]],
+              n_results=int(os.environ["N"]),
+              where=where,
+              include=["documents","metadatas","distances"])
+for i in range(len(r["ids"][0])):
+    d = r["distances"][0][i]
+    m = r["metadatas"][0][i] or {}
+    doc = r["documents"][0][i]
+    title = (m.get("title") or "")[:70]
+    proj = m.get("project") or "-"
+    ftype = m.get("field_type") or "-"
+    conc = m.get("concepts") or "-"
+    did = r["ids"][0][i]
+    print(f"[{d:.3f}] {title}")
+    print(f"        proj={proj} type={ftype} concepts={conc}")
+    print(f"        id={did}")
+    print(f"        {doc[:240]}")
+    print()
+'
+}
+
+cmd_get_session() {
+    local sid="${1:-}"
+    if [ -z "$sid" ]; then
+        echo "USAGE: claude-mem get-session <memory_session_id>" >&2
+        exit 2
+    fi
+    SID="$sid" run_py '
+import os, chromadb
+c = chromadb.HttpClient(host=os.environ["HOST"], port=int(os.environ["PORT"]))
+col = c.get_collection(os.environ["COLLECTION"])
+sid = os.environ["SID"]
+r = col.get(where={"memory_session_id": sid}, include=["documents","metadatas"])
+ids = r["ids"]
+docs = r["documents"]
+metas = [m or {} for m in r["metadatas"]]
+print(f"{len(ids)} docs in session {sid}")
+for i, m in enumerate(metas):
+    if m.get("field_type") == "narrative":
+        title = m.get("title") or ""
+        print(f"\nNARRATIVE  {title}")
+        print(f"  {docs[i]}")
+        break
+facts = [(metas[i], docs[i], ids[i]) for i in range(len(ids)) if metas[i].get("field_type") == "fact"]
+facts.sort(key=lambda x: x[0].get("fact_index", 0))
+print(f"\n{len(facts)} facts:")
+for m, doc, did in facts:
+    tag = m.get("concepts") or "fact"
+    print(f"  - [{tag}] {doc}")
+'
+}
+
+cmd_list_with_concept() {
+    local concept="$1"; shift
+    local project=""
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            --project) project="$2"; shift 2 ;;
+            *) shift ;;
+        esac
+    done
+    CONCEPT="$concept" PROJECT="$project" run_py '
+import os, datetime, chromadb
+c = chromadb.HttpClient(host=os.environ["HOST"], port=int(os.environ["PORT"]))
+col = c.get_collection(os.environ["COLLECTION"])
+concept = os.environ["CONCEPT"]
+project = os.environ.get("PROJECT") or ""
+if project:
+    where = {"$and": [{"concepts": concept}, {"project": project}]}
+else:
+    where = {"concepts": concept}
+r = col.get(where=where, include=["documents","metadatas"])
+rows = sorted(
+    zip(r["ids"], r["documents"], r["metadatas"]),
+    key=lambda x: (x[2] or {}).get("created_at_epoch", 0),
+    reverse=True,
+)
+header = f"{len(rows)} {concept} entries"
+if project:
+    header += f" in project={project}"
+print(header)
+for did, doc, m in rows[:40]:
+    m = m or {}
+    when = m.get("created_at_epoch", 0)
+    dt = datetime.datetime.fromtimestamp(when/1000).strftime("%Y-%m-%d") if when else "?"
+    proj = (m.get("project") or "-").ljust(14)
+    print(f"  {dt}  proj={proj}  {doc[:140]}")
+'
+}
+
+cmd_add() {
+    local field_type="$1"; shift
+    local project="" title="" doc="" sid="" prefix="" concept=""
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            --project)    project="$2"; shift 2 ;;
+            --title)      title="$2";   shift 2 ;;
+            --doc)        doc="$2";     shift 2 ;;
+            --session-id) sid="$2";     shift 2 ;;
+            --id-prefix)  prefix="$2";  shift 2 ;;
+            --concept)    concept="$2"; shift 2 ;;
+            *) echo "unknown flag: $1" >&2; exit 2 ;;
+        esac
+    done
+    if [ -z "$project" ] || [ -z "$title" ] || [ -z "$doc" ]; then
+        echo "REQUIRED: --project, --title, --doc" >&2
+        exit 2
+    fi
+    [ -z "$sid" ] && sid="$(uuidgen 2>/dev/null | tr 'A-Z' 'a-z' || cat /proc/sys/kernel/random/uuid 2>/dev/null)"
+    [ -z "$prefix" ] && prefix="cli_${USER}_$(date +%s)"
+
+    FIELD_TYPE="$field_type" PROJECT="$project" TITLE="$title" DOC="$doc" \
+    SID="$sid" PREFIX="$prefix" CONCEPT="$concept" run_py '
+import os, time, chromadb
+c = chromadb.HttpClient(host=os.environ["HOST"], port=int(os.environ["PORT"]))
+col = c.get_collection(os.environ["COLLECTION"])
+ftype = os.environ["FIELD_TYPE"]
+prefix = os.environ["PREFIX"]
+sid = os.environ["SID"]
+doc_text = os.environ["DOC"]
+doc_id = f"{prefix}_narrative" if ftype == "narrative" else f"{prefix}_fact_0"
+user = os.environ.get("USER") or "unknown"
+meta = {
+    "title": os.environ["TITLE"],
+    "subtitle": doc_text[:200],
+    "project": os.environ["PROJECT"],
+    "doc_type": "observation",
+    "type": "observation",
+    "field_type": ftype,
+    "memory_session_id": sid,
+    "created_at_epoch": int(time.time() * 1000),
+    "source": f"claude-mem-cli/{user}",
+}
+if os.environ.get("CONCEPT"): meta["concepts"] = os.environ["CONCEPT"]
+col.add(ids=[doc_id], documents=[doc_text], metadatas=[meta])
+print(f"wrote {doc_id}  (session {sid})")
+print(f"new pool count: {col.count()}")
+'
+}
+
+case "${1:-}" in
+    health)         shift; cmd_health "$@" ;;
+    search)         shift; cmd_search "$@" ;;
+    get-session)    shift; cmd_get_session "$@" ;;
+    list-decisions) shift; cmd_list_with_concept open_decision "$@" ;;
+    list-blockers)  shift; cmd_list_with_concept blocker "$@" ;;
+    add-narrative)  shift; cmd_add narrative "$@" ;;
+    add-fact)       shift; cmd_add fact "$@" ;;
+    -h|--help|help|"")
+        sed -n '/^# USAGE$/,/^$/p' "$0" | sed 's/^# \?//'
+        ;;
+    *)
+        echo "unknown command: $1" >&2
+        echo "try: claude-mem help" >&2
+        exit 2
+        ;;
+esac

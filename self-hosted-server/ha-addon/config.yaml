@@ -1,0 +1,19 @@
+name: "Personal Memory Server"
+version: "1.5.9"
+slug: "personal_memory_server"
+description: "Chroma vector DB for cross-device shared AI memory"
+arch:
+  - amd64
+  - aarch64
+init: false
+startup: services
+boot: auto
+ports:
+  "8000/tcp": 8000
+ports_description:
+  "8000/tcp": "Chroma HTTP API"
+map:
+  - share:rw
+options: {}
+schema: {}
+url: "https://github.com/<your-github-user>/personal-memory-server"

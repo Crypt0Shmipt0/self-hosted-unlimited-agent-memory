@@ -1,0 +1,13 @@
+{
+  "CLAUDE_MEM_RUNTIME": "worker",
+  "CLAUDE_MEM_PROVIDER": "claude",
+  "CLAUDE_MEM_CLAUDE_AUTH_METHOD": "subscription",
+  "CLAUDE_MEM_MODEL": "claude-opus-4-7",
+
+  "CLAUDE_MEM_CHROMA_MODE": "remote",
+  "CLAUDE_MEM_CHROMA_HOST": "<your-server-host>",
+  "CLAUDE_MEM_CHROMA_PORT": "8000",
+  "CLAUDE_MEM_CHROMA_SSL": "false",
+  "CLAUDE_MEM_CHROMA_TENANT": "default_tenant",
+  "CLAUDE_MEM_CHROMA_DATABASE": "default_database"
+}
